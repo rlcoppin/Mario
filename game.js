@@ -120,6 +120,10 @@ scene("game", () => {
 
     ])
 
+    action('mushroom', (m) => {
+      m.move(10,0) // move mushroom on y-axis
+    })
+
     //player headbumps 
     player.on("headbump", (obj) => {
         if (obj.is('coin-surprise')) {
@@ -127,6 +131,11 @@ scene("game", () => {
             destroy(obj)
             gameLevel.spawn('}', obj.gridPos.sub(0, 0)) // spawns block on surprise block
         }
+        if (obj.is('mushroom-surprise')) {
+          gameLevel.spawn('#', obj.gridPos.sub(0, 1)) //spawns mushroom
+          destroy(obj)
+          gameLevel.spawn('}', obj.gridPos.sub(0, 0)) // spawns block on surprise block
+      }
     })
 
     keyDown('left', () => {
