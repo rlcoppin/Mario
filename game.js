@@ -50,9 +50,9 @@ scene("game", ({ level, score }) => {
         '                                      ',
         '                            -+        ',
         '                    ^   ^   ()        ',
-        '==============================   =====',
-        '==============================   =====',
-        '======      ^=================   =====',
+        '=======      =================   =====',
+        '=======      =================   =====',
+        '==          ^         ========   =====',
         '==============================   =====',
     ],
     [
@@ -82,7 +82,7 @@ scene("game", ({ level, score }) => {
         ')': () => [sprite('pipe-bottom-right'), solid(), scale(0.5)],
         '-': () => [sprite('pipe-top-left'), solid(), scale(0.5), 'pipe'],
         '+': () => [sprite('pipe-top-right'), solid(), scale(0.5), 'pipe'],
-        '^': () => [sprite('evil-shroom'), body(), solid(), 'dangerous'],
+        '^': () => [sprite('evil-shroom'), body(), 'dangerous'],
         '#': () => [sprite('mushroom'), solid(), 'mushroom', body()],
         '!': () => [sprite('blue-block'), solid(), scale(0.5)],
         '£': () => [sprite('blue-brick'), solid(), scale(0.5)],
@@ -237,6 +237,8 @@ scene("game", ({ level, score }) => {
     player.action( () => {
       if (player.grounded()) {
         isJumping = false
+      } else {
+        isJumping = true
       }
     })
 
