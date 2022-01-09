@@ -91,7 +91,7 @@ scene("game", ({ level, score }) => {
 
     const scoreLabel = add([
         text( score ),
-        pos(20, 6),
+        pos(10, 6),
         layer('ui'),
         {
             value: score,
@@ -158,6 +158,8 @@ scene("game", ({ level, score }) => {
 
     player.collides('mushroom', (m) => {
        destroy(m)
+       updateScore(100)
+       displayEarnedPoint('+100')
        player.biggify(6)
     })
 
@@ -168,14 +170,16 @@ scene("game", ({ level, score }) => {
 
     player.collides('coin', (c) => {
       destroy(c)
+      displayEarnedPoint("+5")
       updateScore(5)
     })
 
     action('dangerous', (d) => {
       d.move(-ENEMY_SPEED, 0)
     })
-
-    function scoreTimer(point_str) {
+ 
+    // displays point_str above mario earned immediatley for 1 second
+    function displayEarnedPoint(point_str) {
       const earnPointText = 
       add([
         pos(player.pos.x, player.pos.y - 5),
@@ -190,7 +194,7 @@ scene("game", ({ level, score }) => {
       if (isJumping) {
         destroy(d)
         updateScore(10)
-        scoreTimer("+10")
+        displayEarnedPoint("+10")
       } else {
         go('lose', { score: scoreLabel.value})
       }
@@ -236,6 +240,7 @@ scene("game", ({ level, score }) => {
 })
 
 scene('lose', ({ score }) => {
+  add([text('score', 32), origin('center'), pos(width()/2, height()/4)])
   add([text(score, 32), origin('center'), pos(width()/2, height()/2)])
 })
 
