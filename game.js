@@ -91,7 +91,7 @@ scene("game", ({ level, score }) => {
 
     const scoreLabel = add([
         text( score ),
-        pos(30, 6),
+        pos(20, 6),
         layer('ui'),
         {
             value: score,
@@ -161,19 +161,36 @@ scene("game", ({ level, score }) => {
        player.biggify(6)
     })
 
+    function updateScore(point) {
+      scoreLabel.value += point
+      scoreLabel.text = scoreLabel.value
+    }
+
     player.collides('coin', (c) => {
       destroy(c)
-      scoreLabel.value++
-      scoreLabel.text = scoreLabel.value
+      updateScore(5)
     })
 
     action('dangerous', (d) => {
       d.move(-ENEMY_SPEED, 0)
     })
 
+    function scoreTimer(point_str) {
+      const earnPointText = 
+      add([
+        pos(player.pos.x, player.pos.y - 5),
+        text(point_str)
+      ])
+      wait(1, () => {
+        destroy(earnPointText)
+      })
+    }
+
     player.collides('dangerous', (d) => {
       if (isJumping) {
         destroy(d)
+        updateScore(10)
+        scoreTimer("+10")
       } else {
         go('lose', { score: scoreLabel.value})
       }
