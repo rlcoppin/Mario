@@ -26,8 +26,9 @@ loadSprite('blue-steel', 'gqVoI2b.png')
 loadSprite('blue-evil-shroom', 'SvV4ueD.png')
 loadSprite('blue-surprise', 'RMqCc1G.png')
 
+
 const MOVE_SPEED = 120
-const JUMP_FORCE = 360
+const JUMP_FORCE = 400
 const BIG_JUMP_FORCE = 550
 let CURRENT_JUMP_FORCE = JUMP_FORCE
 const FALL_DEATH = 400
@@ -42,13 +43,16 @@ scene("game", ({ level, score }) => {
       [
         '                                      ',
         '                                      ',
+        '                   $$$$$              ',
+        '                   =====              ',
         '                                      ',
-        '                                      ',
-        '                                      ',
-        '     %   =*=%=                        ',
+        '     ~     =*=%=                      ',
         '                                      ',
         '                            -+        ',
         '                    ^   ^   ()        ',
+        '==============================   =====',
+        '==============================   =====',
+        '======      ^=================   =====',
         '==============================   =====',
     ],
     [
@@ -68,22 +72,23 @@ scene("game", ({ level, score }) => {
     const levelCfg = {
         width: 20,
         height: 20,
-        '=': [sprite('block'), solid()],
-        '$': [sprite('coin'), 'coin'],
-        '%': [sprite('surprise'), solid(), 'coin-surprise'],
-        '*': [sprite('surprise'), solid(), 'mushroom-surprise'],
-        '}': [sprite('unboxed'), solid()],
-        '(': [sprite('pipe-bottom-left'), solid(), scale(0.5)],
-        ')': [sprite('pipe-bottom-right'), solid(), scale(0.5)],
-        '-': [sprite('pipe-top-left'), solid(), scale(0.5), 'pipe'],
-        '+': [sprite('pipe-top-right'), solid(), scale(0.5), 'pipe'],
-        '^': [sprite('evil-shroom'), solid(), 'dangerous'],
-        '#': [sprite('mushroom'), solid(), 'mushroom', body()],
-        '!': [sprite('blue-block'), solid(), scale(0.5)],
-        '£': [sprite('blue-brick'), solid(), scale(0.5)],
-        'z': [sprite('blue-evil-shroom'), solid(), scale(0.5), 'dangerous'],
-        '@': [sprite('blue-surprise'), solid(), scale(0.5), 'coin-surprise'],
-        'x': [sprite('blue-steel'), solid(), scale(0.5)],
+        '=': () => [sprite('block'), solid()],
+        '$': () => [sprite('coin'), 'coin'],
+        '%': () => [sprite('surprise'), solid(), 'coin-surprise'],
+        '*': () => [sprite('surprise'), solid(), 'mushroom-surprise'],
+        '~': () => [sprite('surprise'), solid(), 'shroom-surprise'],
+        '}': () => [sprite('unboxed'), solid()],
+        '(': () => [sprite('pipe-bottom-left'), solid(), scale(0.5)],
+        ')': () => [sprite('pipe-bottom-right'), solid(), scale(0.5)],
+        '-': () => [sprite('pipe-top-left'), solid(), scale(0.5), 'pipe'],
+        '+': () => [sprite('pipe-top-right'), solid(), scale(0.5), 'pipe'],
+        '^': () => [sprite('evil-shroom'), body(), solid(), 'dangerous'],
+        '#': () => [sprite('mushroom'), solid(), 'mushroom', body()],
+        '!': () => [sprite('blue-block'), solid(), scale(0.5)],
+        '£': () => [sprite('blue-brick'), solid(), scale(0.5)],
+        'z': () => [sprite('blue-evil-shroom'), solid(), scale(0.5), 'dangerous', body()],
+        '@': () => [sprite('blue-surprise'), solid(), scale(0.5), 'coin-surprise'],
+        'x': () => [sprite('blue-steel'), solid(), scale(0.5)],
 
     }
 
@@ -153,7 +158,12 @@ scene("game", ({ level, score }) => {
           gameLevel.spawn('#', obj.gridPos.sub(0, 1)) //spawns mushroom
           destroy(obj)
           gameLevel.spawn('}', obj.gridPos.sub(0, 0)) // spawns block on surprise block
-      }
+        }
+        if (obj.is('shroom-surprise')) {
+          gameLevel.spawn('^', obj.gridPos.sub(0, 1)) //spawns mushroom
+          destroy(obj)
+          gameLevel.spawn('}', obj.gridPos.sub(0, 0)) // spawns block on surprise block
+        }
     })
 
     player.collides('mushroom', (m) => {
@@ -240,6 +250,7 @@ scene("game", ({ level, score }) => {
 })
 
 scene('lose', ({ score }) => {
+  add([text('GAME OVER', 34), origin('center'), pos(width()/2, height()/6)])
   add([text('score', 32), origin('center'), pos(width()/2, height()/4)])
   add([text(score, 32), origin('center'), pos(width()/2, height()/2)])
 })
